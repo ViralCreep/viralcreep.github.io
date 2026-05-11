@@ -10,7 +10,7 @@
 
 <script>
   var SUPABASE_URL  = 'https://ushpwjjphhscwkapffxx.supabase.co';
-  var SUPABASE_ANON = 'sb_publishable_Ai_R13hfqKOuLCT-nSNrZA_nmv7ux8C'; // paste your key here
+  var SUPABASE_ANON = 'YOUR_PUBLISHABLE_KEY'; // paste your key here
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -535,8 +535,7 @@ var recoverySession = null;
 sb.auth.onAuthStateChange(async function(event, session) {
   if (event === 'PASSWORD_RECOVERY') {
     recoverySession = session;
-    openModal('newpass-modal');
-    return;
+    return; // inline reset form handles this via URL hash detection
   }
   if (session && session.user) {
     var res = await sb.from('profiles').select('username').eq('id', session.user.id).single();
@@ -1015,9 +1014,8 @@ async function doSetNewPassword() {
       return;
     }
     await sb.auth.signOut();
-    closeModal('newpass-modal');
     showToast('✅ Password updated! Please sign in with your new password.');
-    setTimeout(function(){ openModal('signin-modal'); }, 500);
+    setTimeout(function(){ window.location.href = window.location.pathname; }, 1500);
   } catch(e) {
     showToast('Something went wrong: ' + e.message, true);
   } finally {
