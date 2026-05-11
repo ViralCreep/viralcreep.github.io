@@ -637,7 +637,7 @@ async function doForgotPassword() {
 
   setLoading('forgot-btn', true);
   var res = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + window.location.pathname
+    redirectTo: 'https://viralcreep.github.io/crafthub/'
   });
   setLoading('forgot-btn', false);
 
