@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CraftHub — Minecraft Mods, Addons & More</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<script>
+  var SUPABASE_URL  = 'https://ushpwjjphhscwkapffxx.supabase.co';
+  var SUPABASE_ANON = 'YOUR_PUBLISHABLE_KEY'; // paste your key here
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green:#16a34a; --green-light:#dcfce7; --green-dark:#14532d;
+  --surface:#fff; --surface-2:#f8fafc; --surface-3:#f1f5f9;
+  --border:#e2e8f0; --border-hover:#cbd5e1;
+  --text:#0f172a; --text-2:#475569; --text-3:#94a3b8;
+  --red:#ef4444; --red-light:#fef2f2;
+  --radius-lg:14px; --shadow-md:0 4px 16px rgba(0,0,0,.09); --shadow-lg:0 24px 64px rgba(0,0,0,.22);
+}
+body { font-family:'DM Sans',sans-serif; background:var(--surface-2); color:var(--text); min-height:100vh; }
+
+nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; height:56px; display:flex; align-items:center; gap:24px; position:sticky; top:0; z-index:100; }
+.logo { display:flex; align-items:center; gap:9px; text-decoration:none; flex-shrink:0; }
+.logo-mark { width:30px; height:30px; background:var(--green); border-radius:7px; display:grid; grid-template-columns:1fr 1fr; gap:3px; padding:6px; }
+.logo-mark span { background:rgba(255,255,255,.92); border-radius:2px; }
+.logo-mark span:last-child { opacity:.5; }
+.logo-text { font-size:16px; font-weight:600; color:var(--text); letter-spacing:-.3px; }
+.logo-text em { color:var(--green); font-style:normal; }
+.nav-links { display:flex; gap:2px; flex:1; }
+.nav-tab { text-decoration:none; font-size:14px; color:var(--text-2); padding:5px 11px; border-radius:7px; cursor:pointer; transition:background .13s,color .13s; border:none; background:transparent; font-family:'DM Sans',sans-serif; }
+.nav-tab:hover { background:var(--surface-3); color:var(--text); }
+.nav-tab.active { color:var(--text); font-weight:500; background:var(--surface-3); }
+.nav-right { display:flex; gap:8px; align-items:center; }
+
+.btn { padding:7px 15px; font-size:13px; font-family:'DM Sans',sans-serif; border-radius:8px; cursor:pointer; font-weight:500; transition:all .13s; border:1px solid var(--border); background:transparent; color:var(--text); }
+.btn:hover { background:var(--surface-3); }
+.btn-green { background:var(--green); color:#fff; border-color:transparent; }
+.btn-green:hover { background:#15803d; }
+.btn-full { width:100%; justify-content:center; display:flex; align-items:center; gap:7px; }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+
+.user-menu { position:relative; }
+.nav-avatar { display:flex; align-items:center; gap:9px; cursor:pointer; padding:4px 10px 4px 4px; border-radius:999px; border:1px solid var(--border); background:transparent; font-family:'DM Sans',sans-serif; transition:background .13s; }
+.nav-avatar:hover { background:var(--surface-3); }
+.avatar-circle { width:28px; height:28px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; flex-shrink:0; }
+.nav-avatar-name { font-size:13px; font-weight:500; color:var(--text); }
+.user-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow-md); min-width:170px; overflow:hidden; z-index:200; }
+.user-dropdown.open { display:block; }
+.dd-item { padding:9px 14px; font-size:13px; color:var(--text-2); cursor:pointer; transition:background .12s; display:flex; align-items:center; gap:8px; }
+.dd-item:hover { background:var(--surface-3); color:var(--text); }
+.dd-item.danger { color:var(--red); }
+.dd-item.danger:hover { background:var(--red-light); }
+.dd-sep { height:1px; background:var(--border); }
+
+.hero { background:var(--surface); border-bottom:1px solid var(--border); padding:44px 28px 32px; text-align:center; }
+.hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--green-light); color:var(--green-dark); font-size:12px; font-weight:500; padding:4px 12px; border-radius:999px; margin-bottom:16px; }
+.hero-badge::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; }
+.hero h1 { font-size:32px; font-weight:600; letter-spacing:-.7px; margin-bottom:9px; line-height:1.2; }
+.hero p { font-size:15px; color:var(--text-2); margin-bottom:24px; font-weight:300; }
+.search-bar { max-width:520px; margin:0 auto 20px; position:relative; }
+.search-bar svg { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-3); width:17px; height:17px; pointer-events:none; }
+.search-bar input { width:100%; padding:11px 16px 11px 42px; font-size:14px; font-family:'DM Sans',sans-serif; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface); color:var(--text); outline:none; transition:border-color .15s,box-shadow .15s; }
+.search-bar input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,.1); }
+.search-bar input::placeholder { color:var(--text-3); }
+.hero-stats { display:flex; gap:28px; justify-content:center; }
+.hero-stat { font-size:13px; color:var(--text-3); }
+.hero-stat strong { color:var(--text-2); font-weight:500; }
+
+.layout { display:grid; grid-template-columns:210px 1fr; max-width:1280px; margin:0 auto; }
+
+.sidebar { padding:20px 14px; border-right:1px solid var(--border); background:var(--surface); position:sticky; top:56px; height:calc(100vh - 56px); overflow-y:auto; }
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
+.sb-section { margin-bottom:26px; }
+.sb-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--text-3); margin-bottom:5px; padding:0 7px; }
+.sb-item { display:flex; align-items:center; gap:8px; padding:6px 7px; border-radius:7px; font-size:13px; color:var(--text-2); cursor:pointer; transition:all .12s; user-select:none; }
+.sb-item:hover { background:var(--surface-3); color:var(--text); }
+.sb-item.active { background:var(--green-light); color:var(--green-dark); font-weight:500; }
+.sb-icon { font-size:15px; width:18px; text-align:center; flex-shrink:0; }
+.sb-count { margin-left:auto; font-size:10px; background:var(--surface-3); border-radius:999px; padding:1px 7px; color:var(--text-3); font-family:'DM Mono',monospace; }
+.sb-item.active .sb-count { background:rgba(22,163,74,.12); color:var(--green); }
+
+.main { padding:22px 26px; }
+.main-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.main-header-left h2 { font-size:15px; font-weight:500; }
+.main-header-left span { font-size:12px; color:var(--text-3); }
+
+.mod-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:13px; }
+.mod-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; cursor:pointer; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.mod-card:hover { border-color:var(--border-hover); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.card-thumb { height:116px; display:flex; align-items:center; justify-content:center; font-size:40px; position:relative; overflow:hidden; }
+.card-thumb-pat { position:absolute; inset:0; opacity:.06; background-image:repeating-linear-gradient(45deg,#000 0,#000 1px,transparent 0,transparent 50%); background-size:10px 10px; }
+.card-ed { position:absolute; top:8px; right:8px; font-size:10px; font-weight:600; padding:2px 7px; border-radius:999px; font-family:'DM Mono',monospace; }
+.ed-java { background:rgba(251,191,36,.2); color:#92400e; }
+.ed-bedrock { background:rgba(59,130,246,.15); color:#1e40af; }
+.ed-both { background:rgba(22,163,74,.15); color:#14532d; }
+.card-body { padding:11px 13px 13px; }
+.card-type { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+.t-mod{color:#16a34a;} .t-addon{color:#2563eb;} .t-resource{color:#d97706;} .t-map{color:#db2777;} .t-skin{color:#7c3aed;}
+.card-name { font-size:13.5px; font-weight:500; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-author { font-size:11.5px; color:var(--text-3); margin-bottom:9px; }
+.card-footer { display:flex; align-items:center; justify-content:space-between; }
+.card-ver { font-size:10.5px; font-family:'DM Mono',monospace; color:var(--text-3); background:var(--surface-3); padding:2px 7px; border-radius:5px; }
+.card-dl { font-size:11.5px; color:var(--text-3); display:flex; align-items:center; gap:3px; }
+.card-dl svg { width:12px; height:12px; }
+
+.empty-state { grid-column:1/-1; text-align:center; padding:80px 40px; }
+.empty-icon { width:62px; height:62px; margin:0 auto 14px; background:var(--surface-3); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+.empty-state h3 { font-size:16px; font-weight:500; margin-bottom:7px; }
+.empty-state p { font-size:14px; color:var(--text-3); margin-bottom:22px; max-width:300px; margin-left:auto; margin-right:auto; line-height:1.6; }
+.loading-grid { grid-column:1/-1; display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:13px; }
+.skel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.skel-thumb { height:116px; background:linear-gradient(90deg,var(--surface-3) 25%,var(--surface-2) 50%,var(--surface-3) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+.skel-body { padding:11px 13px 13px; }
+.skel-line { height:10px; border-radius:99px; background:linear-gradient(90deg,var(--surface-3) 25%,var(--surface-2) 50%,var(--surface-3) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; margin-bottom:8px; }
+.skel-line.short { width:60%; }
+@keyframes shimmer { to { background-position:-200% 0; } }
+
+.upload-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.upload-row:last-child { border-bottom:none; }
+.upload-row-emoji { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.upload-row-info { flex:1; min-width:0; }
+.upload-row-title { font-size:14px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upload-row-meta { font-size:12px; color:var(--text-3); margin-top:2px; }
+.upload-row-del { font-size:12px; color:var(--red); cursor:pointer; padding:4px 8px; border-radius:6px; border:none; background:transparent; font-family:'DM Sans',sans-serif; flex-shrink:0; }
+.upload-row-del:hover { background:var(--red-light); }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.42); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--surface); border-radius:18px; padding:30px; width:100%; max-width:420px; max-height:92vh; overflow-y:auto; box-shadow:var(--shadow-lg); }
+.modal-wide { max-width:470px; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.modal-header h2 { font-size:17px; font-weight:600; letter-spacing:-.3px; }
+.modal-sub { font-size:13px; color:var(--text-3); margin-bottom:22px; line-height:1.5; }
+.modal-close { width:30px; height:30px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:transparent; color:var(--text-2); font-size:16px; transition:background .12s; flex-shrink:0; }
+.modal-close:hover { background:var(--surface-3); }
+.modal-footer { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
+.modal-switch { text-align:center; margin-top:16px; font-size:13px; color:var(--text-3); }
+.modal-link { font-size:13px; color:var(--green); cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+
+.form-group { margin-bottom:15px; }
+.form-label { display:block; font-size:13px; font-weight:500; color:var(--text-2); margin-bottom:5px; }
+.form-input { width:100%; padding:9px 11px; font-size:13.5px; font-family:'DM Sans',sans-serif; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); outline:none; transition:border-color .15s; }
+.form-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,.08); }
+.form-input::placeholder { color:var(--text-3); }
+.form-input.error { border-color:var(--red); }
+.form-error { font-size:12px; color:var(--red); margin-top:4px; display:none; }
+.form-error.show { display:block; }
+textarea.form-input { min-height:80px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+.form-select { width:100%; padding:9px 11px; font-size:13.5px; font-family:'DM Sans',sans-serif; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); outline:none; cursor:pointer; }
+.form-select:focus { border-color:var(--green); }
+.form-hint { font-size:12px; color:var(--text-3); margin-top:4px; }
+
+.steps { display:flex; gap:6px; margin-bottom:22px; }
+.step { flex:1; height:3px; border-radius:99px; background:var(--surface-3); transition:background .3s; }
+.step.active { background:var(--green); }
+
+.info-box { background:var(--green-light); border:1px solid #86efac; border-radius:8px; padding:12px 14px; font-size:13px; color:var(--green-dark); line-height:1.6; margin-bottom:16px; }
+.warn-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px 14px; font-size:13px; color:#92400e; line-height:1.6; margin-bottom:16px; }
+
+.strength-bar { display:flex; gap:4px; margin-top:6px; }
+.str-seg { flex:1; height:3px; border-radius:99px; background:var(--surface-3); transition:background .3s; }
+.str-lbl { font-size:11px; color:var(--text-3); margin-top:4px; }
+
+.toast { position:fixed; bottom:24px; right:24px; z-index:400; background:var(--text); color:#fff; padding:12px 18px; border-radius:10px; font-size:13px; font-weight:500; transform:translateY(80px); opacity:0; transition:all .3s cubic-bezier(.34,1.56,.64,1); pointer-events:none; max-width:320px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.error { background:var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo" onclick="setPage('browse');return false;">
+    <div class="logo-mark"><span></span><span></span><span></span><span></span></div>
+    <span class="logo-text">Craft<em>Hub</em></span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab active" id="tab-browse"    onclick="setPage('browse')">Browse</button>
+    <button class="nav-tab"        id="tab-new"       onclick="setPage('new')">New uploads</button>
+    <button class="nav-tab"        id="tab-top"       onclick="setPage('top')">Top rated</button>
+    <button class="nav-tab"        id="tab-myuploads" onclick="setPage('myuploads')" style="display:none">My uploads</button>
+  </div>
+  <div class="nav-right" id="nav-right">
+    <button class="btn" onclick="openModal('signin-modal')">Sign in</button>
+    <button class="btn btn-green" onclick="openModal('signup-modal')">Create account</button>
+  </div>
+</nav>
+
+<div class="hero" id="hero-section">
+  <div class="hero-badge" id="hero-badge">Free to join — upload instantly after signup</div>
+  <h1 id="hero-title">The open Minecraft content hub</h1>
+  <p id="hero-sub">Mods, addons, resource packs, maps &amp; skin packs for Java and Bedrock.</p>
+  <div class="search-bar">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M15 15l-3-3" stroke-linecap="round"/></svg>
+    <input type="text" id="search-input" placeholder="Search mods, skin packs, maps…" oninput="handleSearch(this.value)"/>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong id="total-count">—</strong> uploads</div>
+    <div class="hero-stat"><strong id="creator-count">—</strong> creators</div>
+    <div class="hero-stat"><strong id="type-count">—</strong> content types</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">Content type</div>
+      <div class="sb-item active" id="sbt-all"      onclick="setSidebarType('all',this)">      <span class="sb-icon">📦</span> All            <span class="sb-count" id="cnt-all">0</span></div>
+      <div class="sb-item"        id="sbt-mod"      onclick="setSidebarType('mod',this)">      <span class="sb-icon">⚙️</span> Mods           <span class="sb-count" id="cnt-mod">0</span></div>
+      <div class="sb-item"        id="sbt-addon"    onclick="setSidebarType('addon',this)">    <span class="sb-icon">🧩</span> Addons         <span class="sb-count" id="cnt-addon">0</span></div>
+      <div class="sb-item"        id="sbt-resource" onclick="setSidebarType('resource',this)"> <span class="sb-icon">🎨</span> Resource packs <span class="sb-count" id="cnt-resource">0</span></div>
+      <div class="sb-item"        id="sbt-map"      onclick="setSidebarType('map',this)">      <span class="sb-icon">🗺️</span> Maps           <span class="sb-count" id="cnt-map">0</span></div>
+      <div class="sb-item"        id="sbt-skin"     onclick="setSidebarType('skin',this)">     <span class="sb-icon">👤</span> Skin packs     <span class="sb-count" id="cnt-skin">0</span></div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">Edition</div>
+      <div class="sb-item active" id="sbe-all"     onclick="setSidebarEd('all',this)">    <span class="sb-icon">🌐</span> All editions</div>
+      <div class="sb-item"        id="sbe-java"    onclick="setSidebarEd('java',this)">   <span class="sb-icon">☕</span> Java</div>
+      <div class="sb-item"        id="sbe-bedrock" onclick="setSidebarEd('bedrock',this)"><span class="sb-icon">🪨</span> Bedrock</div>
+    </div>
+    <div class="sb-section" id="sort-section">
+      <div class="sb-title">Sort by</div>
+      <div class="sb-item active" id="sbs-newest" onclick="setSidebarSort('newest',this)"><span class="sb-icon">🕐</span> Newest first</div>
+      <div class="sb-item"        id="sbs-az"     onclick="setSidebarSort('az',this)">    <span class="sb-icon">🔤</span> A–Z</div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-area">
+    <div id="browse-panel">
+      <div class="main-header">
+        <div class="main-header-left">
+          <h2 id="section-title">All content</h2>
+          <span id="result-count"></span>
+        </div>
+      </div>
+      <div class="mod-grid" id="mod-grid">
+        <div class="loading-grid" id="loading-grid">
+          <div class="skel"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+          <div class="skel"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+          <div class="skel"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+          <div class="skel"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="myuploads-panel" style="display:none">
+      <div class="main-header">
+        <div class="main-header-left"><h2>My uploads</h2><span id="my-count"></span></div>
+        <button class="btn btn-green btn-sm" onclick="openUpload()">+ New upload</button>
+      </div>
+      <div id="my-list"></div>
+    </div>
+  </main>
+</div>
+
+<!-- SIGN UP MODAL -->
+<div class="modal-overlay" id="signup-modal" onclick="closeOnOverlay(event,'signup-modal')">
+  <div class="modal">
+    <div id="su-step1">
+      <div class="modal-header"><h2>Create account</h2><button class="modal-close" onclick="closeModal('signup-modal')">✕</button></div>
+      <p class="modal-sub">Fill in your details — we'll email you a confirmation link.</p>
+      <div class="steps"><div class="step active"></div><div class="step"></div><div class="step"></div></div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" id="su-username" placeholder="e.g. SteveDev"/>
+        <div class="form-error" id="su-username-err"></div>
+        <div class="form-hint">Letters, numbers and underscores only.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" id="su-email" placeholder="you@example.com"/>
+        <div class="form-error" id="su-email-err">Please enter a valid email.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="su-password" placeholder="At least 8 characters" oninput="checkStrength(this.value)"/>
+        <div class="form-error" id="su-pw-err">Password must be at least 8 characters.</div>
+        <div class="strength-bar"><div class="str-seg" id="str1"></div><div class="str-seg" id="str2"></div><div class="str-seg" id="str3"></div><div class="str-seg" id="str4"></div></div>
+        <div class="str-lbl" id="str-label"></div>
+      </div>
+      <button class="btn btn-green btn-full" id="su-btn" onclick="doSignUp()">Create account →</button>
+      <div class="modal-switch">Already have an account? <span class="modal-link" onclick="closeModal('signup-modal');openModal('signin-modal')">Sign in</span></div>
+    </div>
+    <div id="su-step2" style="display:none;text-align:center;padding:8px 0">
+      <div style="font-size:48px;margin-bottom:16px">📧</div>
+      <h2 style="font-size:19px;font-weight:600;margin-bottom:10px">Check your email</h2>
+      <p style="font-size:14px;color:var(--text-3);margin-bottom:20px;line-height:1.6" id="su-email-sent-msg"></p>
+      <div class="info-box">Click the confirmation link in your inbox to activate your account, then sign in.</div>
+      <div class="steps" style="margin-bottom:24px"><div class="step active"></div><div class="step active"></div><div class="step"></div></div>
+      <button class="btn btn-full" onclick="closeModal('signup-modal');openModal('signin-modal')">Go to sign in →</button>
+      <div class="modal-switch" style="margin-top:12px"><span class="modal-link" onclick="showSuStep(1)">← Change details</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGN IN MODAL -->
+<div class="modal-overlay" id="signin-modal" onclick="closeOnOverlay(event,'signin-modal')">
+  <div class="modal">
+    <div class="modal-header"><h2>Sign in</h2><button class="modal-close" onclick="closeModal('signin-modal')">✕</button></div>
+    <p class="modal-sub">Welcome back to CraftHub.</p>
+    <div id="si-unverified" class="warn-box" style="display:none">Your email isn't verified yet. Check your inbox for the confirmation link.</div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="si-email" placeholder="you@example.com"/>
+      <div class="form-error" id="si-err"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="si-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignIn()"/>
+    </div>
+    <button class="btn btn-green btn-full" id="si-btn" style="margin-top:4px" onclick="doSignIn()">Sign in →</button>
+    <div class="modal-switch">
+      <span class="modal-link" onclick="closeModal('signin-modal');openModal('forgot-modal')">Forgot password?</span>
+      &nbsp;·&nbsp; No account? <span class="modal-link" onclick="closeModal('signin-modal');openModal('signup-modal')">Create one</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="forgot-modal" onclick="closeOnOverlay(event,'forgot-modal')">
+  <div class="modal">
+    <div id="forgot-step1">
+      <div class="modal-header"><h2>Reset password</h2><button class="modal-close" onclick="closeModal('forgot-modal')">✕</button></div>
+      <p class="modal-sub">Enter your email and we'll send you a reset link.</p>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" id="forgot-email" placeholder="you@example.com"/>
+        <div class="form-error" id="forgot-err">Please enter a valid email.</div>
+      </div>
+      <button class="btn btn-green btn-full" id="forgot-btn" onclick="doForgotPassword()">Send reset link →</button>
+      <div class="modal-switch"><span class="modal-link" onclick="closeModal('forgot-modal');openModal('signin-modal')">← Back to sign in</span></div>
+    </div>
+    <div id="forgot-step2" style="display:none;text-align:center;padding:8px 0">
+      <div style="font-size:48px;margin-bottom:16px">📨</div>
+      <h2 style="font-size:19px;font-weight:600;margin-bottom:10px">Check your email</h2>
+      <p style="font-size:14px;color:var(--text-3);margin-bottom:20px;line-height:1.6" id="forgot-sent-msg"></p>
+      <div class="info-box">Click the link in the email to set a new password. It may take a minute to arrive.</div>
+      <button class="btn btn-full" style="margin-top:16px" onclick="closeModal('forgot-modal');openModal('signin-modal')">Back to sign in</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal" onclick="closeOnOverlay(event,'settings-modal')">
+  <div class="modal">
+    <div class="modal-header"><h2>Settings</h2><button class="modal-close" onclick="closeModal('settings-modal')">✕</button></div>
+    <p class="modal-sub" id="settings-sub"></p>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" type="text" id="set-username" placeholder="New username"/>
+      <div class="form-error" id="set-username-err"></div>
+    </div>
+    <div style="height:1px;background:var(--border);margin:18px 0;"></div>
+    <p style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Change password — leave blank to keep current</p>
+    <div class="form-group">
+      <label class="form-label">New password</label>
+      <input class="form-input" type="password" id="set-pw" placeholder="At least 8 characters"/>
+    </div>
+    <div style="height:1px;background:var(--border);margin:18px 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button class="btn" style="color:var(--red);border-color:var(--red)" onclick="deleteAccount()">Delete account</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="closeModal('settings-modal')">Cancel</button>
+        <button class="btn btn-green" id="set-save-btn" onclick="saveSettings()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="upload-modal" onclick="closeOnOverlay(event,'upload-modal')">
+  <div class="modal modal-wide">
+    <div class="modal-header"><h2>Upload content</h2><button class="modal-close" onclick="closeModal('upload-modal')">✕</button></div>
+    <p class="modal-sub" id="upload-sub"></p>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" type="text" id="f-title" placeholder="Name your creation"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input" id="f-desc" placeholder="What does it do? What's included?"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="f-type" onchange="buildEmojiPicker(this.value)">
+          <option value="mod">Mod</option>
+          <option value="addon">Addon</option>
+          <option value="resource">Resource pack</option>
+          <option value="map">Map</option>
+          <option value="skin">Skin pack</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Edition</label>
+        <select class="form-select" id="f-edition">
+          <option value="java">Java</option><option value="bedrock">Bedrock</option><option value="both">Both</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">MC version</label>
+        <select class="form-select" id="f-version">
+          <option>1.21</option><option>1.20</option><option>1.19</option><option>1.18</option><option>1.17</option><option>Older</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Download link</label>
+        <input class="form-input" type="url" id="f-link" placeholder="https://…"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Thumbnail</label>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px" id="emoji-picker"></div>
+      <input class="form-input" type="text" id="f-emoji" placeholder="Or type any emoji" maxlength="4"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('upload-modal')">Cancel</button>
+      <button class="btn btn-green" id="upload-btn" onclick="submitUpload()">Publish →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── If this is a password reset link, show reset UI instead of main site ─
+(function() {
+  var hash = window.location.hash;
+  var params = {};
+  if (hash) {
+    hash.substring(1).split('&').forEach(function(part) {
+      var kv = part.split('=');
+      if (kv.length >= 2) params[kv[0]] = decodeURIComponent(kv.slice(1).join('='));
+    });
+  }
+  if (params.type === 'recovery' && params.access_token) {
+    // Hide entire site, show reset form
+    document.body.innerHTML = `
+      <div style="font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f8fafc;">
+        <div style="background:#fff;border-radius:18px;padding:36px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.1);">
+          <a href="/" style="display:flex;align-items:center;gap:9px;text-decoration:none;margin-bottom:28px;">
+            <div style="width:30px;height:30px;background:#16a34a;border-radius:7px;display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px;">
+              <span style="background:rgba(255,255,255,.92);border-radius:2px;"></span>
+              <span style="background:rgba(255,255,255,.92);border-radius:2px;opacity:.5;"></span>
+              <span style="background:rgba(255,255,255,.92);border-radius:2px;"></span>
+              <span style="background:rgba(255,255,255,.92);border-radius:2px;opacity:.5;"></span>
+            </div>
+            <span style="font-size:16px;font-weight:600;color:#0f172a;">Craft<em style="color:#16a34a;font-style:normal;">Hub</em></span>
+          </a>
+          <h2 style="font-size:20px;font-weight:600;color:#0f172a;margin-bottom:6px;">Set new password</h2>
+          <p style="font-size:14px;color:#94a3b8;margin-bottom:24px;">Choose a new password for your account.</p>
+          <label style="display:block;font-size:13px;font-weight:500;color:#475569;margin-bottom:5px;">New password</label>
+          <input id="rp-pw" type="password" placeholder="At least 8 characters" style="width:100%;padding:10px 12px;font-size:14px;border:1px solid #e2e8f0;border-radius:8px;outline:none;margin-bottom:14px;font-family:'DM Sans',sans-serif;box-sizing:border-box;"/>
+          <label style="display:block;font-size:13px;font-weight:500;color:#475569;margin-bottom:5px;">Confirm password</label>
+          <input id="rp-confirm" type="password" placeholder="Repeat password" style="width:100%;padding:10px 12px;font-size:14px;border:1px solid #e2e8f0;border-radius:8px;outline:none;margin-bottom:6px;font-family:'DM Sans',sans-serif;box-sizing:border-box;"/>
+          <div id="rp-err" style="color:#ef4444;font-size:12px;margin-bottom:12px;display:none;"></div>
+          <button id="rp-btn" onclick="doReset()" style="width:100%;padding:11px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;background:#16a34a;color:#fff;border:none;border-radius:8px;cursor:pointer;">Save new password →</button>
+          <div id="rp-success" style="display:none;text-align:center;margin-top:20px;">
+            <div style="font-size:48px;margin-bottom:12px;">✅</div>
+            <p style="font-size:15px;font-weight:500;color:#0f172a;margin-bottom:8px;">Password updated!</p>
+            <a href="/" style="color:#16a34a;font-size:14px;text-decoration:none;font-weight:500;">← Sign in to CraftHub</a>
+          </div>
+        </div>
+      </div>`;
+
+    // Set session from URL tokens - clear URL AFTER session is set
+    sb.auth.setSession({
+      access_token: params.access_token,
+      refresh_token: params.refresh_token
+    }).then(function(r) {
+      if (r.error) {
+        document.getElementById('rp-err').textContent = 'Link expired. Please request a new reset link.';
+        document.getElementById('rp-err').style.display = 'block';
+        document.getElementById('rp-btn').disabled = true;
+      } else {
+        // Only clear URL after session is confirmed set
+        history.replaceState(null, '', window.location.pathname);
+      }
+    });
+
+    window.doReset = async function() {
+      var pw = document.getElementById('rp-pw').value;
+      var confirm = document.getElementById('rp-confirm').value;
+      var err = document.getElementById('rp-err');
+      err.style.display = 'none';
+      if (!pw || pw.length < 8) { err.textContent = 'Password must be at least 8 characters.'; err.style.display = 'block'; return; }
+      if (pw !== confirm) { err.textContent = "Passwords don't match."; err.style.display = 'block'; return; }
+      var btn = document.getElementById('rp-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+      var res = await sb.auth.updateUser({ password: pw });
+      if (res.error) { err.textContent = res.error.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Save new password →'; return; }
+      await sb.auth.signOut();
+      btn.style.display = 'none';
+      document.getElementById('rp-success').style.display = 'block';
+    };
+  }
+})();
+
+var currentUser   = null;
+var currentPage   = 'browse';
+var filterType    = 'all';
+var filterEdition = 'all';
+var sortMode      = 'newest';
+var searchQuery   = '';
+var allUploads    = [];
+
+var TYPE_EMOJIS = {
+  mod:['⚙️','🔧','🛠️','⚡','🔩','💡','🎮'],
+  addon:['🧩','➕','🔌','🪄','✨','🎯','🔮'],
+  resource:['🎨','🖼️','🌈','🎭','✏️','🖌️','🌟'],
+  map:['🗺️','🏔️','🏰','🌍','🌿','⛰️','🌊'],
+  skin:['👤','🧑','👕','🎭','🧢','👾','🦸']
+};
+var TYPE_BG     = { mod:'#f0fdf4', addon:'#eff6ff', resource:'#fffbeb', map:'#fdf2f8', skin:'#f5f3ff' };
+var TYPE_LABELS = { mod:'Mod', addon:'Addon', resource:'Resource pack', map:'Map', skin:'Skin pack' };
+var ED_LABELS   = { java:'Java', bedrock:'Bedrock', both:'Java+BE' };
+
+// ── Auth state ─────────────────────────────────────
+var recoverySession = null;
+sb.auth.onAuthStateChange(async function(event, session) {
+  if (event === 'PASSWORD_RECOVERY') {
+    recoverySession = session;
+    openModal('newpass-modal');
+    return;
+  }
+  if (session && session.user) {
+    var res = await sb.from('profiles').select('username').eq('id', session.user.id).single();
+    currentUser = {
+      id:       session.user.id,
+      email:    session.user.email,
+      username: (res.data && res.data.username) ? res.data.username : session.user.email.split('@')[0]
+    };
+  } else {
+    currentUser = null;
+  }
+  updateNavAuth();
+  if (currentPage === 'myuploads' && !currentUser) setPage('browse');
+  fetchAndRender();
+});
+
+// ── Sign up ─────────────────────────────────────────
+async function doSignUp() {
+  var username = document.getElementById('su-username').value.trim();
+  var email    = document.getElementById('su-email').value.trim();
+  var password = document.getElementById('su-password').value;
+  var ok = true;
+
+  ['su-username-err','su-email-err','su-pw-err'].forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+  ['su-username','su-email','su-password'].forEach(function(id){ document.getElementById(id).classList.remove('error'); });
+
+  if (!username || !/^[a-zA-Z0-9_]{2,20}$/.test(username)) {
+    document.getElementById('su-username').classList.add('error');
+    document.getElementById('su-username-err').textContent = 'Username must be 2–20 chars (letters, numbers, _).';
+    document.getElementById('su-username-err').classList.add('show'); ok = false;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('su-email').classList.add('error');
+    document.getElementById('su-email-err').classList.add('show'); ok = false;
+  }
+  if (!password || password.length < 8) {
+    document.getElementById('su-password').classList.add('error');
+    document.getElementById('su-pw-err').classList.add('show'); ok = false;
+  }
+  if (!ok) return;
+
+  var check = await sb.from('profiles').select('id').eq('username', username).maybeSingle();
+  if (check.data) {
+    document.getElementById('su-username').classList.add('error');
+    document.getElementById('su-username-err').textContent = 'Username already taken.';
+    document.getElementById('su-username-err').classList.add('show'); return;
+  }
+
+  setLoading('su-btn', true);
+  var res = await sb.auth.signUp({ email: email, password: password, options: { data: { username: username } } });
+  setLoading('su-btn', false);
+
+  if (res.error) { showToast(res.error.message, true); return; }
+  document.getElementById('su-email-sent-msg').textContent = 'We sent a confirmation link to ' + email + '.';
+  showSuStep(2);
+}
+
+// ── Sign in (FIXED — wait for currentUser before toast) ─
+async function doSignIn() {
+  var email    = document.getElementById('si-email').value.trim();
+  var password = document.getElementById('si-pass').value;
+  document.getElementById('si-err').classList.remove('show');
+  document.getElementById('si-unverified').style.display = 'none';
+
+  if (!email || !password) { showToast('Enter your email and password.', true); return; }
+
+  setLoading('si-btn', true);
+  var res = await sb.auth.signInWithPassword({ email: email, password: password });
+  setLoading('si-btn', false);
+
+  if (res.error) {
+    if (res.error.message.toLowerCase().includes('email not confirmed')) {
+      document.getElementById('si-unverified').style.display = 'block';
+    } else {
+      document.getElementById('si-err').textContent = res.error.message;
+      document.getElementById('si-err').classList.add('show');
+    }
+    return;
+  }
+
+  // ✅ FIX: use session data directly instead of relying on currentUser being set yet
+  var username = res.data.user.user_metadata && res.data.user.user_metadata.username
+    ? res.data.user.user_metadata.username
+    : res.data.user.email.split('@')[0];
+
+  closeModal('signin-modal');
+  showToast('Welcome back, ' + username + '! 👋');
+}
+
+// ── Forgot password ─────────────────────────────────
+async function doForgotPassword() {
+  var email = document.getElementById('forgot-email').value.trim();
+  document.getElementById('forgot-err').classList.remove('show');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('forgot-err').classList.add('show'); return;
+  }
+
+  setLoading('forgot-btn', true);
+  var res = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname
+  });
+  setLoading('forgot-btn', false);
+
+  if (res.error) { showToast(res.error.message, true); return; }
+
+  document.getElementById('forgot-sent-msg').textContent =
+    'We sent a password reset link to ' + email + '. Click it to choose a new password.';
+  document.getElementById('forgot-step1').style.display = 'none';
+  document.getElementById('forgot-step2').style.display = '';
+}
+
+// ── Sign out ────────────────────────────────────────
+async function doSignOut() {
+  await sb.auth.signOut();
+  showToast('Signed out.');
+}
+
+// ── Settings ────────────────────────────────────────
+function openSettings() {
+  if (!currentUser) return;
+  document.getElementById('settings-sub').textContent = currentUser.email;
+  document.getElementById('set-username').value = currentUser.username;
+  document.getElementById('set-pw').value = '';
+  document.getElementById('set-username-err').classList.remove('show');
+  openModal('settings-modal');
+}
+
+async function saveSettings() {
+  if (!currentUser) return;
+  var newUsername = document.getElementById('set-username').value.trim();
+  var newPw       = document.getElementById('set-pw').value;
+
+  if (!newUsername || !/^[a-zA-Z0-9_]{2,20}$/.test(newUsername)) {
+    document.getElementById('set-username-err').textContent = 'Invalid username.';
+    document.getElementById('set-username-err').classList.add('show'); return;
+  }
+  if (newUsername !== currentUser.username) {
+    var check = await sb.from('profiles').select('id').eq('username', newUsername).maybeSingle();
+    if (check.data) {
+      document.getElementById('set-username-err').textContent = 'Username already taken.';
+      document.getElementById('set-username-err').classList.add('show'); return;
+    }
+  }
+
+  setLoading('set-save-btn', true);
+  await sb.from('profiles').update({ username: newUsername }).eq('id', currentUser.id);
+  if (newPw && newPw.length >= 8) await sb.auth.updateUser({ password: newPw });
+  currentUser.username = newUsername;
+  setLoading('set-save-btn', false);
+  updateNavAuth();
+  closeModal('settings-modal');
+  showToast('✅ Settings saved!');
+}
+
+async function deleteAccount() {
+  if (!confirm('Delete your account and all your uploads? This cannot be undone.')) return;
+  await sb.from('uploads').delete().eq('user_id', currentUser.id);
+  await sb.from('profiles').delete().eq('id', currentUser.id);
+  await sb.auth.signOut();
+  showToast('Account deleted.');
+}
+
+// ── Fetch uploads ───────────────────────────────────
+async function fetchAndRender() {
+  try {
+    var res = await sb.from('uploads').select('*, profiles(username)').order('created_at', { ascending: false });
+    if (res.error) { showToast('Could not load uploads: ' + res.error.message, true); return; }
+    allUploads = (res.data || []).map(function(row) {
+      return {
+        id:      row.id,
+        user_id: row.user_id,
+        author:  row.profiles ? row.profiles.username : 'Unknown',
+        title:   row.title,
+        desc:    row.description,
+        type:    row.content_type,
+        edition: row.edition,
+        version: row.mc_version,
+        link:    row.download_link,
+        emoji:   row.emoji,
+        ts:      new Date(row.created_at).getTime()
+      };
+    });
+    renderGrid();
+    updateStats();
+    if (currentPage === 'myuploads') renderMyUploads();
+  } catch(e) {
+    showToast('Error loading uploads. Check your Supabase key.', true);
+  }
+}
+
+// ── Upload (FIXED — proper error display) ───────────
+function openUpload() {
+  if (!currentUser) { openModal('signup-modal'); return; }
+  document.getElementById('upload-sub').textContent = 'Uploading as ' + currentUser.username;
+  buildEmojiPicker(document.getElementById('f-type').value);
+  openModal('upload-modal');
+}
+
+async function submitUpload() {
+  if (!currentUser) { showToast('You must be signed in to upload.', true); return; }
+  var title   = document.getElementById('f-title').value.trim();
+  var desc    = document.getElementById('f-desc').value.trim();
+  var type    = document.getElementById('f-type').value;
+  var edition = document.getElementById('f-edition').value;
+  var version = document.getElementById('f-version').value;
+  var link    = document.getElementById('f-link').value.trim();
+  var emoji   = document.getElementById('f-emoji').value.trim() || '📦';
+
+  if (!title) { showToast('Please enter a title.', true); return; }
+
+  setLoading('upload-btn', true);
+  try {
+    var res = await sb.from('uploads').insert({
+      user_id:       currentUser.id,
+      title:         title,
+      description:   desc,
+      content_type:  type,
+      edition:       edition,
+      mc_version:    version,
+      download_link: link,
+      emoji:         emoji
+    });
+    if (res.error) { showToast('Upload failed: ' + res.error.message, true); return; }
+    ['f-title','f-desc','f-link'].forEach(function(id){ document.getElementById(id).value=''; });
+    closeModal('upload-modal');
+    await fetchAndRender();
+    showToast('✅ Published! Your content is now live.');
+  } catch(e) {
+    showToast('Upload failed. Please try again.', true);
+  } finally {
+    setLoading('upload-btn', false);
+  }
+}
+
+// ── My Uploads ──────────────────────────────────────
+function renderMyUploads() {
+  if (!currentUser) return;
+  var myItems = allUploads.filter(function(u){ return u.user_id === currentUser.id; });
+  document.getElementById('my-count').textContent = myItems.length + ' upload' + (myItems.length !== 1 ? 's' : '');
+  var list = document.getElementById('my-list');
+  if (myItems.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📤</div><h3>No uploads yet</h3><p>Hit "+ New upload" to share your first creation.</p></div>';
+    return;
+  }
+  list.innerHTML = myItems.map(function(u) {
+    return '<div class="upload-row">' +
+      '<div class="upload-row-emoji" style="background:' + (TYPE_BG[u.type]||'#f8fafc') + '">' + u.emoji + '</div>' +
+      '<div class="upload-row-info">' +
+        '<div class="upload-row-title">' + u.title + '</div>' +
+        '<div class="upload-row-meta">' + (TYPE_LABELS[u.type]||u.type) + ' · ' + (ED_LABELS[u.edition]||u.edition) + ' · ' + u.version + '</div>' +
+      '</div>' +
+      '<button class="upload-row-del" onclick="deleteUpload(\'' + u.id + '\')">Delete</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function deleteUpload(id) {
+  if (!confirm('Delete this upload?')) return;
+  await sb.from('uploads').delete().eq('id', id);
+  await fetchAndRender();
+  showToast('Upload deleted.');
+}
+
+// ── Render grid ─────────────────────────────────────
+function renderGrid() {
+  var items = allUploads.slice();
+  if (filterType !== 'all')    items = items.filter(function(u){ return u.type === filterType; });
+  if (filterEdition !== 'all') items = items.filter(function(u){ return u.edition === filterEdition || u.edition === 'both'; });
+  if (searchQuery) {
+    var q = searchQuery.toLowerCase();
+    items = items.filter(function(u){ return u.title.toLowerCase().includes(q) || u.author.toLowerCase().includes(q); });
+  }
+  if (sortMode === 'az') items.sort(function(a,b){ return a.title.localeCompare(b.title); });
+  else items.sort(function(a,b){ return b.ts - a.ts; });
+
+  document.getElementById('section-title').textContent =
+    ({all:'All content',mod:'Mods',addon:'Addons',resource:'Resource packs',map:'Maps',skin:'Skin packs'})[filterType] || 'All content';
+  document.getElementById('result-count').textContent =
+    items.length === 0 ? 'No results' : items.length + ' result' + (items.length !== 1 ? 's' : '');
+
+  var grid = document.getElementById('mod-grid');
+  grid.innerHTML = '';
+
+  if (items.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>Nothing here yet</h3><p>Create an account and be the first to upload!</p><button class="btn btn-green" onclick="openUpload()">Upload something</button></div>';
+    return;
+  }
+
+  items.forEach(function(u) {
+    var card = document.createElement('div');
+    card.className = 'mod-card';
+    if (u.link) card.onclick = function(){ window.open(u.link, '_blank'); };
+    var edCls = u.edition==='java' ? 'ed-java' : u.edition==='bedrock' ? 'ed-bedrock' : 'ed-both';
+    card.innerHTML =
+      '<div class="card-thumb" style="background:' + (TYPE_BG[u.type]||'#f8fafc') + '">' +
+        '<div class="card-thumb-pat"></div>' +
+        '<span style="position:relative;z-index:1;font-size:40px">' + (u.emoji||'📦') + '</span>' +
+        '<span class="card-ed ' + edCls + '">' + (ED_LABELS[u.edition]||u.edition) + '</span>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-type t-' + u.type + '">' + (TYPE_LABELS[u.type]||u.type) + '</div>' +
+        '<div class="card-name" title="' + u.title + '">' + u.title + '</div>' +
+        '<div class="card-author">by ' + u.author + '</div>' +
+        '<div class="card-footer">' +
+          '<span class="card-ver">' + u.version + '</span>' +
+          '<span class="card-dl"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke-linecap="round" stroke-linejoin="round"/></svg>0</span>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+}
+
+function updateStats() {
+  var counts = { all:allUploads.length, mod:0, addon:0, resource:0, map:0, skin:0 };
+  allUploads.forEach(function(u){ if(counts[u.type]!==undefined) counts[u.type]++; });
+  Object.keys(counts).forEach(function(k){ var el=document.getElementById('cnt-'+k); if(el) el.textContent=counts[k]; });
+  document.getElementById('total-count').textContent   = allUploads.length;
+  document.getElementById('creator-count').textContent = new Set(allUploads.map(function(u){return u.user_id;})).size;
+  document.getElementById('type-count').textContent    = new Set(allUploads.map(function(u){return u.type;})).size;
+}
+
+// ── Page routing ────────────────────────────────────
+function setPage(page) {
+  currentPage = page;
+  ['browse','new','top','myuploads'].forEach(function(p){
+    var t=document.getElementById('tab-'+p); if(t) t.classList.toggle('active', p===page);
+  });
+  var hero=document.getElementById('hero-section');
+  var sidebar=document.getElementById('sidebar');
+  var browseP=document.getElementById('browse-panel');
+  var myP=document.getElementById('myuploads-panel');
+
+  if (page === 'myuploads') {
+    if (!currentUser) { openModal('signin-modal'); return; }
+    hero.style.display=sidebar.style.display='none';
+    browseP.style.display='none'; myP.style.display='block';
+    renderMyUploads(); return;
+  }
+  hero.style.display=sidebar.style.display='';
+  browseP.style.display='block'; myP.style.display='none';
+
+  if (page==='new') {
+    sortMode='newest';
+    document.getElementById('hero-badge').textContent='Fresh from the community';
+    document.getElementById('hero-title').textContent='New uploads';
+    document.getElementById('hero-sub').textContent='The latest Minecraft content added by the community.';
+    document.getElementById('sort-section').style.display='none';
+  } else if (page==='top') {
+    sortMode='az';
+    document.getElementById('hero-badge').textContent='Community favourites';
+    document.getElementById('hero-title').textContent='Top rated';
+    document.getElementById('hero-sub').textContent='The most downloaded and highest rated content.';
+    document.getElementById('sort-section').style.display='none';
+  } else {
+    sortMode='newest';
+    document.getElementById('hero-badge').textContent='Free to join — upload instantly after signup';
+    document.getElementById('hero-title').textContent='The open Minecraft content hub';
+    document.getElementById('hero-sub').textContent='Mods, addons, resource packs, maps & skin packs for Java and Bedrock.';
+    document.getElementById('sort-section').style.display='';
+  }
+  document.getElementById('search-input').value=''; searchQuery=''; renderGrid();
+}
+
+// ── Nav auth ────────────────────────────────────────
+function updateNavAuth() {
+  var nr=document.getElementById('nav-right');
+  var tabMy=document.getElementById('tab-myuploads');
+  if (currentUser) {
+    var ini=currentUser.username.slice(0,2).toUpperCase();
+    nr.innerHTML=
+      '<button class="btn btn-green" onclick="openUpload()">+ Upload</button>' +
+      '<div class="user-menu" id="user-menu">' +
+        '<button class="nav-avatar" onclick="toggleDD(event)">' +
+          '<div class="avatar-circle">'+ini+'</div>' +
+          '<span class="nav-avatar-name">'+currentUser.username+'</span>' +
+        '</button>' +
+        '<div class="user-dropdown" id="user-dd">' +
+          '<div class="dd-item" onclick="setPage(\'myuploads\');closeDD()">📤 My uploads</div>' +
+          '<div class="dd-item" onclick="openSettings();closeDD()">⚙️ Settings</div>' +
+          '<div class="dd-sep"></div>' +
+          '<div class="dd-item danger" onclick="doSignOut()">Sign out</div>' +
+        '</div>' +
+      '</div>';
+    if (tabMy) tabMy.style.display='inline-flex';
+  } else {
+    nr.innerHTML=
+      '<button class="btn" onclick="openModal(\'signin-modal\')">Sign in</button>' +
+      '<button class="btn btn-green" onclick="openModal(\'signup-modal\')">Create account</button>';
+    if (tabMy) tabMy.style.display='none';
+  }
+}
+
+function toggleDD(e){ e.stopPropagation(); var dd=document.getElementById('user-dd'); if(dd) dd.classList.toggle('open'); }
+function closeDD(){ var dd=document.getElementById('user-dd'); if(dd) dd.classList.remove('open'); }
+document.addEventListener('click', closeDD);
+
+// ── Sidebar filters ─────────────────────────────────
+function setSidebarType(type,el){ filterType=type; document.querySelectorAll('[id^="sbt-"]').forEach(function(i){i.classList.remove('active');}); el.classList.add('active'); renderGrid(); }
+function setSidebarEd(ed,el){ filterEdition=ed; document.querySelectorAll('[id^="sbe-"]').forEach(function(i){i.classList.remove('active');}); el.classList.add('active'); renderGrid(); }
+function setSidebarSort(s,el){ sortMode=s; document.querySelectorAll('[id^="sbs-"]').forEach(function(i){i.classList.remove('active');}); el.classList.add('active'); renderGrid(); }
+function handleSearch(val){ searchQuery=val; renderGrid(); }
+
+// ── Emoji picker ────────────────────────────────────
+function buildEmojiPicker(type){
+  var picker=document.getElementById('emoji-picker');
+  var emojis=TYPE_EMOJIS[type]||TYPE_EMOJIS.mod;
+  picker.innerHTML=emojis.map(function(e,i){
+    return '<button type="button" onclick="selectEmoji(\''+e+'\',this)" style="font-size:20px;width:36px;height:36px;border:1.5px solid '+(i===0?'var(--green)':'var(--border)')+';border-radius:7px;cursor:pointer;background:var(--surface);">'+e+'</button>';
+  }).join('');
+  document.getElementById('f-emoji').value=emojis[0];
+}
+function selectEmoji(e,btn){
+  document.getElementById('f-emoji').value=e;
+  document.querySelectorAll('#emoji-picker button').forEach(function(b){b.style.borderColor='var(--border)';});
+  btn.style.borderColor='var(--green)';
+}
+
+// ── Password strength ───────────────────────────────
+function checkStrength(pw){
+  var s=0;
+  if(pw.length>=8)s++;if(pw.length>=12)s++;
+  if(/[A-Z]/.test(pw)&&/[a-z]/.test(pw))s++;
+  if(/[0-9]/.test(pw)&&/[^a-zA-Z0-9]/.test(pw))s++;
+  var colors=['','#ef4444','#f97316','#eab308','#16a34a'];
+  for(var i=1;i<=4;i++){var el=document.getElementById('str'+i);if(el)el.style.background=i<=s?colors[s]:'var(--surface-3)';}
+  var lbl=document.getElementById('str-label');
+  if(lbl){lbl.textContent=pw.length?(['','Weak','Fair','Good','Strong'][s]||''):'';lbl.style.color=colors[s]||'var(--text-3)';}
+}
+
+// ── Helpers ─────────────────────────────────────────
+function showSuStep(n){ [1,2].forEach(function(i){var el=document.getElementById('su-step'+i);if(el)el.style.display=i===n?'':'none';}); }
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeOnOverlay(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
+function setLoading(btnId,loading){
+  var btn=document.getElementById(btnId); if(!btn) return;
+  btn.disabled=loading;
+  if(loading){ btn._orig=btn.textContent; btn.textContent='Loading…'; }
+  else{ btn.textContent=btn._orig||btn.textContent; }
+}
+function showToast(msg,isError){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(isError?' error':'');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+// ── Set new password (after clicking reset email link) ─
+async function doSetNewPassword() {
+  var pw      = document.getElementById('np-pw').value;
+  var confirm = document.getElementById('np-confirm').value;
+  document.getElementById('np-pw-err').classList.remove('show');
+  document.getElementById('np-confirm-err').classList.remove('show');
+
+  if (!pw || pw.length < 8) {
+    document.getElementById('np-pw-err').classList.add('show'); return;
+  }
+  if (pw !== confirm) {
+    document.getElementById('np-confirm-err').classList.add('show'); return;
+  }
+
+  setLoading('np-btn', true);
+  try {
+    // Re-apply the recovery session right before updating
+    if (recoverySession) {
+      await sb.auth.setSession({
+        access_token: recoverySession.access_token,
+        refresh_token: recoverySession.refresh_token
+      });
+    }
+    var updateRes = await sb.auth.updateUser({ password: pw });
+    if (updateRes.error) {
+      showToast(updateRes.error.message, true);
+      return;
+    }
+    await sb.auth.signOut();
+    closeModal('newpass-modal');
+    showToast('✅ Password updated! Please sign in with your new password.');
+    setTimeout(function(){ openModal('signin-modal'); }, 500);
+  } catch(e) {
+    showToast('Something went wrong: ' + e.message, true);
+  } finally {
+    setLoading('np-btn', false);
+  }
+}
+
+function checkStrengthNp(pw){
+  var s=0;
+  if(pw.length>=8)s++;if(pw.length>=12)s++;
+  if(/[A-Z]/.test(pw)&&/[a-z]/.test(pw))s++;
+  if(/[0-9]/.test(pw)&&/[^a-zA-Z0-9]/.test(pw))s++;
+  var colors=['','#ef4444','#f97316','#eab308','#16a34a'];
+  for(var i=1;i<=4;i++){var el=document.getElementById('npstr'+i);if(el)el.style.background=i<=s?colors[s]:'var(--surface-3)';}
+  var lbl=document.getElementById('npstr-label');
+  if(lbl){lbl.textContent=pw.length?(['','Weak','Fair','Good','Strong'][s]||''):'';lbl.style.color=colors[s]||'var(--text-3)';}
+}
+
+// Password reset handled by /reset.html
+</script>
+
+<!--
+═══════════════════════════════════════════════════════════════
+  SQL for Supabase — run this in SQL Editor if not done yet
+═══════════════════════════════════════════════════════════════
+
+create table public.profiles (
+  id         uuid primary key references auth.users(id) on delete cascade,
+  username   text unique not null,
+  created_at timestamptz default now()
+);
+
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, username)
+  values (new.id, coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)));
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+create table public.uploads (
+  id            uuid primary key default gen_random_uuid(),
+  user_id       uuid references public.profiles(id) on delete cascade,
+  title         text not null,
+  description   text,
+  content_type  text not null,
+  edition       text not null,
+  mc_version    text not null,
+  download_link text,
+  emoji         text default '📦',
+  created_at    timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+alter table public.uploads  enable row level security;
+create policy "profiles_read_all" on public.profiles for select using (true);
+create policy "uploads_read_all"  on public.uploads  for select using (true);
+create policy "profiles_owner"    on public.profiles for all using (auth.uid() = id);
+create policy "uploads_owner"     on public.uploads  for all using (auth.uid() = user_id);
+
+═══════════════════════════════════════════════════════════════
+-->
+</body>
+</html>
